@@ -46,6 +46,7 @@ fi
 
 export NCCL_SOCKET_IFNAME=hsn0,hsn1,hsn2,hsn3
 export NCCL_DEBUG=INFO
+export RDZV_PORT=29400
 export NCCL_NET_GDR_LEVEL=3
 export MIOPEN_USER_DB_PATH=/tmp/${USER}-miopen-cache-${SLURM_JOB_ID}
 export MIOPEN_CUSTOM_CACHE_DIR=${MIOPEN_USER_DB_PATH}
@@ -62,6 +63,11 @@ export MIOPEN_FIND_MODE=2
 
 srun -N 16 --gpus 128 --ntasks-per-node=8 --cpus-per-task=7 --cpu-bind=mask_cpu:$MYMASKS \
 fairseq-hydra-train \
+    dataset.num_workers=0 \
+    dataset.max_tokens=2400000 \
+    distributed_training.distributed_world_size=128 \
+    distributed_training.nprocs_per_node=8 \
+    distributed_training.distributed_port=$RDZV_PORT \
     +model.w2v_path=/my_pretrained_wav2vec2.pt \
     --config-dir config/finetuning \
     --config-name  wav2vec2_base_lp_finparl.yaml
