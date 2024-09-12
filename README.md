@@ -46,3 +46,11 @@ To fine-tune a wav2vec 2.0 Base model using Huggingface Transformers, run
 ```
 sbatch scripts/finetuning/low-resource-asr/finetune_wav2vec2_base.sh
 ```
+
+## Computing Layer Utilization Rate (LUR)
+
+![LUR](figures/ig_analysis.svg)
+
+To calculate the neuron attributions using Integrated Gradients (IG), run `scripts/interpretation/ig_single_layer.sh` for each layer. After that, run the notebook `scripts/interpretation/compute_LUR.ipynb` to visualize the Layer Utilization Rates (LURs).
+
+More details on the LUR are available in the [paper](TODO).
