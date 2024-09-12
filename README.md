@@ -5,12 +5,12 @@ Scripts for training large-scale monolingual speech foundation models with 158K 
 
 Model
 |---
-[wav2vec 2.0 Base Pre-trained](TODO) 
-[wav2vec 2.0 Base Fine-tuned](TODO) 
-[wav2vec 2.0 Large Pre-trained](TODO) 
-[wav2vec 2.0 Large Fine-tuned](TODO) 
-[wav2vec 2.0 X-Large Pre-trained](TODO)
-[wav2vec 2.0 X-Large Fine-tuned](TODO)
+[wav2vec 2.0 Base Pre-trained](https://zenodo.org/doi/10.5281/zenodo.13754087) 
+[wav2vec 2.0 Base Fine-tuned](https://zenodo.org/doi/10.5281/zenodo.13754085) 
+[wav2vec 2.0 Large Pre-trained](https://zenodo.org/doi/10.5281/zenodo.13754083) 
+[wav2vec 2.0 Large Fine-tuned](https://zenodo.org/doi/10.5281/zenodo.13754081) 
+[wav2vec 2.0 X-Large Pre-trained](https://zenodo.org/doi/10.5281/zenodo.13754079)
+[wav2vec 2.0 X-Large Fine-tuned](https://zenodo.org/doi/10.5281/zenodo.13754077)
 
 More details on the models are available in the [paper](TODO).
 The models are also available at [Huggingface Hub](https://huggingface.co/collections/GetmanY1/wav2vec2-fi-150k-66c9d75d18579088974ea37f)
