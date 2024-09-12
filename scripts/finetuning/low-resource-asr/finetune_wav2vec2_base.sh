@@ -64,29 +64,29 @@ export MIOPEN_FIND_MODE=2
 torchrun \
 	--nproc_per_node 8 /scripts/finetuning/low-resource-asr/run_speech_recognition_ctc_multigpu.py \
 	--dataset_name="cv_16_1" \ # --dataset_name="fleurs_fi" \
-  --cache_dir="/cache" \
+  	--cache_dir="/cache" \
 	--model_name_or_path="/pretrained_wav2vec2_hf" \
-  --tokenizer_name_or_path="/pretrained_wav2vec2_hf" \
+  	--tokenizer_name_or_path="/pretrained_wav2vec2_hf" \
 	--output_dir="/outputs_hf" \
 	--report_to="wandb" \
 	--num_train_epochs="80" \
-  --preprocessing_num_workers="$(nproc)" \
+  	--preprocessing_num_workers="$(nproc)" \
 	--per_device_train_batch_size="12" \
 	--learning_rate="1e-4" \
 	--warmup_ratio="0.25" \
 	--evaluation_strategy="epoch" \
-  --logging_strategy="epoch" \
-  --save_strategy="epoch" \
+  	--logging_strategy="epoch" \
+  	--save_strategy="epoch" \
 	--text_column_name="text" \
 	--save_total_limit="6" \
-  --eval_metrics wer cer \
+  	--eval_metrics wer cer \
 	--load_best_model_at_end=True \
-  --metric_for_best_model="wer" \
-   --greater_is_better=False \
+  	--metric_for_best_model="wer" \
+  	--greater_is_better=False \
 	--freeze_feature_encoder \
 	--gradient_checkpointing \
 	--chars_to_ignore , ? . ! - \; \: \" % ‘ � \
 	--fp16 \
 	--group_by_length \
-  --ddp_timeout="18000" \
+  	--ddp_timeout="18000" \
 	--do_train --do_eval
