@@ -1,0 +1,71 @@
+common:
+  fp16: true
+  log_format: json
+  log_interval: 50
+  log_file: /logs_wav2vec2_base_kavi.out
+  wandb_project: wav2vec2_base_kavi
+
+checkpoint:
+  save_interval_updates: 500
+  keep_interval_updates: 1
+  keep_best_checkpoints: 10
+  no_epoch_checkpoints: true
+  save_dir: /outputs_wav2vec2_base_kavi
+  load_checkpoint_on_all_dp_ranks: true
+
+task:
+  _name: audio_pretraining
+  binarized_dataset: True
+  data: /manifest_output
+  max_sample_size: 960000
+  min_sample_size: 32000
+  normalize: false
+
+dataset:
+  validate_interval: 500
+  skip_invalid_size_inputs_valid_test: true
+  valid_subset: valid_FULL,valid_LP,valid_fi_parl,valid_VP_fi,valid_alfatv,valid_mtv3,valid_yletv1,valid_ylepuhe
+
+distributed_training:
+  ddp_backend: legacy_ddp
+
+criterion:
+  _name: wav2vec
+  infonce: true
+  log_keys: ["prob_perplexity","code_perplexity","temp"]
+  loss_weights: [0.1, 10]
+
+optimization:
+  max_update: 125000
+  update_freq: [1]
+  lr: [0.0006]
+
+optimizer:
+  _name: adam
+  adam_betas: (0.9,0.98)
+  adam_eps: 1e-06
+  weight_decay: 0.01
+
+lr_scheduler:
+  _name: polynomial_decay
+  warmup_updates: 3000
+
+model:
+  _name: wav2vec2
+  quantize_targets: true
+  latent_temp: [2.0, 0.5, 0.999995]
+  extractor_mode: default
+  layer_norm_first: false
+  final_dim: 256
+  dropout_input: 0.1
+  dropout_features: 0.1
+  feature_grad_mult: 0.1
+  encoder_embed_dim: 768
+  encoder_layers: 12
+  encoder_ffn_embed_dim: 3072
+  encoder_attention_heads: 12
+  activation_fn: gelu
+  dropout: 0.1
+  attention_dropout: 0.1
+  activation_dropout: 0.0
+  encoder_layerdrop: 0.0
