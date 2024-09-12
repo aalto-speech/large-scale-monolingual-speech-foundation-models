@@ -1,0 +1,62 @@
+common:
+  fp16: true
+  min_loss_scale:  0.0000001
+  log_format: json
+  log_interval: 50
+  log_file: /logs_wav2vec2_large_lp_finparl.out
+  wandb_project: wav2vec2_large_lp_finparl
+
+checkpoint:
+  save_interval: 1
+  no_epoch_checkpoints: true
+  keep_best_checkpoints: 5
+  save_dir: /outputs_wav2vec2_large_lp_finparl
+  load_checkpoint_on_all_dp_ranks: true
+  best_checkpoint_metric: wer
+
+task:
+  _name: audio_finetuning
+  data: /labeled_full
+  normalize: true
+  max_sample_size: 960000000
+  min_sample_size: 5880
+  labels: ltr
+
+dataset:
+  data_buffer_size: 5
+  train_subset: train-full
+  valid_subset: valid-LP-50s,parl2016-dev,parl2016-test,parl2020-test
+  skip_invalid_size_inputs_valid_test: false
+
+distributed_training:
+  ddp_backend: legacy_ddp
+
+criterion:
+  _name: ctc
+  zero_infinity: true
+
+optimization:
+  max_update: 16450
+  sentence_avg: false
+  update_freq: [1]
+  lr: [0.0001]
+
+optimizer:
+  _name: adam
+  adam_betas: (0.9,0.98)
+  adam_eps: 1e-08
+
+lr_scheduler:
+  _name: polynomial_decay
+  warmup_updates: 1250
+
+model:
+  _name: wav2vec_ctc
+  apply_mask: true
+  mask_prob: 0.5
+  mask_channel_prob: 0.5
+  mask_channel_length: 64
+  layerdrop: 0.1
+  activation_dropout: 0.1
+  feature_grad_mult: 0.0
+  freeze_finetune_updates: 0
