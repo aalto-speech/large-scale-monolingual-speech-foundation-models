@@ -23,7 +23,40 @@ Developing a foundation model from scratch requires not only vast amounts of unl
 * [wav2vec 2.0 Large](https://wandb.ai/getmanya/wav2vec2_large_KAVI?nw=nwusergetmanya)
 * [wav2vec 2.0 X-Large](https://wandb.ai/getmanya/wav2vec2_1B_KAVI?nw=nwusergetmanya)
 
-## Data pre-processing 
+## Data pre-processing
+
+The raw, unlabeled TV and radio data are organized into 1-hour files, each located in the directory `channel_name/year/month/day/channel_name_start_time-end_time.ts`:
+
+```
+.
+└── raw_tv_and_radio_data/
+    ├── radio_channel_1/
+    │   ├── 2009/
+    │   │   ├── 01/
+    │   │   │   ├── 01/
+    │   │   │   │   ├── radio_channel_1_0000-0100.ts
+    │   │   │   │   ├── radio_channel_1_0100-0200.ts
+    │   │   │   │   └── ...
+    │   │   │   ├── 02/
+    │   │   │   │   └── ...
+    │   │   │   └── ...
+    │   │   ├── 02/
+    │   │   │   └── .../
+    │   │   │       └── ...
+    │   │   └── ...
+    │   └── 2010/
+    │       └── .../
+    │           └── .../
+    │               └── ...
+    ├── tv_channel_2/
+    │   └── ...
+    └── ...
+```
+
+1. Convert the files to 16kHz mono flac audio by running `scripts/data_preprocessing/convert_to_flac.sh`. The script preserves the original folder structure.
+2. Run voice activity detection (VAD) to split the data into shorter utterances and reduce the non-speech events, such as music, noise, and silence, and put them into _uncompressed_ (.tar) tarballs.
+**Note:** Fairseq does not support compressed archives
+**Note:** Millions of small files affect the performance of any filesystem. As a result, quotas on Lustre filesystems are typically limited to several million files. To avoid running out of quota, put the short audio files into a .tar archive after VAD-based segmentation of a small part of the raw data (one day, month, or year), and remove them immediately afterward. You can also consider storing the preprocessed audio files in the `/tmp` folder, which usually does not consume the quota.
 
 ## Pre-training the models
 
