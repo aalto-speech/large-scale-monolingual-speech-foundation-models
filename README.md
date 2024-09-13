@@ -15,6 +15,14 @@ Model
 More details on the models are available in the [paper](TODO).
 The models are also available at [Huggingface Hub](https://huggingface.co/collections/GetmanY1/wav2vec2-fi-150k-66c9d75d18579088974ea37f)
 
+## Training logs
+
+Developing a foundation model from scratch requires not only vast amounts of unlabeled speech data but also substantial computational resources. Moreover, extensive hyperparameter search is often not feasible for large-scale models. Therefore, we are glad to share our pre-training logs on Weights & Biases (W&B) to provide more insights for other researchers developing their own speech foundation models.
+
+* [wav2vec 2.0 Base](https://wandb.ai/getmanya/wav2vec2_base_KAVI?nw=nwusergetmanya)
+* [wav2vec 2.0 Large](https://wandb.ai/getmanya/wav2vec2_large_KAVI?nw=nwusergetmanya)
+* [wav2vec 2.0 X-Large](https://wandb.ai/getmanya/wav2vec2_1B_KAVI?nw=nwusergetmanya)
+
 ## Data pre-processing 
 
 ## Pre-training the models
