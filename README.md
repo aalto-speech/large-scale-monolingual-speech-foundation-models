@@ -55,6 +55,6 @@ sbatch scripts/finetuning/low-resource-asr/finetune_wav2vec2_base.sh
 
 ![LUR](figures/ig_analysis.svg)
 
-To calculate the neuron attributions using Integrated Gradients (IG), run `scripts/interpretation/ig_single_layer.sh` for each layer. After that, run the notebook `scripts/interpretation/compute_LUR.ipynb` to visualize the Layer Utilization Rates (LURs).
+To calculate the neuron attributions for all layers using Integrated Gradients (IG), run `scripts/interpretation/ig.sh`. After that, run the notebook `scripts/interpretation/compute_LUR.ipynb` to visualize the Layer Utilization Rates (LURs).
 
 More details on the LUR are available in the [paper](TODO).
