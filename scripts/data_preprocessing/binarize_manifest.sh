@@ -22,4 +22,4 @@ dest_dir=/binarize_manifest/manifest_bin_$channel
 train_split=train_$channel
 valid_split=valid_$channel
 fairseq_root=/my_python_env/fairseq
-bash binarize_manifest_bash.sh ${dest_dir} ${train_split} ${valid_split} ${fairseq_root}
+bash ${fairseq_root}/examples/wav2vec/scripts/binarize_manifest.sh ${dest_dir} ${train_split} ${valid_split} ${fairseq_root}
