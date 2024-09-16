@@ -54,9 +54,11 @@ The raw, unlabeled TV and radio data are organized into 1-hour files, each locat
 ```
 
 1. Convert the files to 16kHz mono flac audio by running `scripts/data_preprocessing/convert_to_flac.sh`. The script preserves the original folder structure.
-2. Run voice activity detection (VAD) to split the data into shorter utterances and reduce the non-speech events, such as music, noise, and silence, and put them into _uncompressed_ (.tar) tarballs.
+2. Run voice activity detection (VAD) to split the data into shorter utterances and reduce the non-speech events, such as music, noise, and silence, and put them into _uncompressed_ (.tar) tarballs, with one archive per year per radio station or TV channel. The script `scripts/data_preprocessing/segment_with_vad_and_tar.sh` does it for one year of the data from `radio_station_1`. The script also stores a Python dictionary `out_file_to_nframes_dict` with the number of frames for each audio segment, which will be needed later to create the Fairseq manifest of the data.
 **Note:** Fairseq does not support compressed archives
 **Note:** Millions of small files affect the performance of any filesystem. As a result, quotas on Lustre filesystems are typically limited to several million files. To avoid running out of quota, put the short audio files into a .tar archive after VAD-based segmentation of a small part of the raw data (one day, month, or year), and remove them immediately afterward. You can also consider storing the preprocessed audio files in the `/tmp` folder, which usually does not consume the quota.
+3. Prepare the Fairseq manifest of the data. `scripts/data_preprocessing/prepare_fairseq_manifest.sh` creates a .tsv file with all `radio_station_1` audio samples stored in the corresponding .tar archives. To hold out a validation subset `valid_size_hours` hours, run `scripts/data_preprocessing/prepare_fairseq_manifest_valid_tsv.sh` afterward.
+4. Binarize the Fairseq manifest by running `scripts/data_preprocessing/binarize_manifest.sh`. This step is recommended for large datasets to avoid running out of RAM during pre-training. 
 
 ## Pre-training the models
 
