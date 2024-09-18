@@ -12,7 +12,7 @@ Model
 [wav2vec 2.0 X-Large Pre-trained](https://zenodo.org/doi/10.5281/zenodo.13754079)
 [wav2vec 2.0 X-Large Fine-tuned](https://zenodo.org/doi/10.5281/zenodo.13754077)
 
-More details on the models are available in the [paper](TODO).
+More details on the models are available in the [paper (TBA)](TODO).
 The models are also available at [Huggingface Hub](https://huggingface.co/collections/GetmanY1/wav2vec2-fi-150k-66c9d75d18579088974ea37f)
 
 ## Training logs
