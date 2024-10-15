@@ -2,7 +2,7 @@
 #SBATCH --job-name=finetune_wav2vec2_base
 #SBATCH --output=/finetune_wav2vec2_base.o
 #SBATCH --error=/finetune_wav2vec2_base.e
-#SBATCH --partition=dev-g
+#SBATCH --partition=small-g
 #SBATCH --nodes=16
 #SBATCH --ntasks-per-node=8
 #SBATCH --cpus-per-task=7
