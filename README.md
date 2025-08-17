@@ -12,7 +12,7 @@ Model
 [wav2vec 2.0 X-Large Pre-trained](https://zenodo.org/doi/10.5281/zenodo.13754079)
 [wav2vec 2.0 X-Large Fine-tuned](https://zenodo.org/doi/10.5281/zenodo.13754077)
 
-More details on the models are available in the [paper (TBA)](TODO).
+More details on the models are available in the [paper](https://www.isca-archive.org/interspeech_2025/getman25_interspeech.html).
 The models are also available at [Huggingface Hub](https://huggingface.co/collections/GetmanY1/wav2vec2-fi-150k-66c9d75d18579088974ea37f)
 
 ## Training logs
@@ -94,3 +94,18 @@ To fine-tune a wav2vec 2.0 Base model using Huggingface Transformers, run
 sbatch scripts/finetuning/low-resource-asr/finetune_wav2vec2_base.sh
 ```
 
+## Citation
+
+If you use our models or scripts, please cite our article as:
+
+```bibtex
+@inproceedings{getman25_interspeech,
+  title     = {{Is your model big enough? Training and interpreting large-scale monolingual speech foundation models}},
+  author    = {{Yaroslav Getman and Tamás Grósz and Tommi Lehtonen and Mikko Kurimo}},
+  year      = {{2025}},
+  booktitle = {{Interspeech 2025}},
+  pages     = {{231--235}},
+  doi       = {{10.21437/Interspeech.2025-46}},
+  issn      = {{2958-1796}},
+}
+```
