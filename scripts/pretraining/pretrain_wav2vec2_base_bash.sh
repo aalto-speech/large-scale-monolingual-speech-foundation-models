@@ -27,10 +27,13 @@ rocm-smi
 sleep 2
 
 fairseq-hydra-train \
-dataset.num_workers=0 \
-dataset.max_tokens=2800000 \
-distributed_training.distributed_world_size=512 \
-distributed_training.nprocs_per_node=8 \
-distributed_training.distributed_port=$RDZV_PORT \
---config-dir /config/pretraining \
---config-name wav2vec2_base_kavi.yaml
+    common.log_file=/logs/logs_B.out \
+    checkpoint.save_dir=/outputs/B \
+    +task.data=/binarized_manifest \
+    dataset.num_workers=7 \
+    dataset.max_tokens=2800000 \
+    distributed_training.distributed_world_size=$TOTAL_GPUS \
+    distributed_training.nprocs_per_node=8 \
+    distributed_training.distributed_port=$RDZV_PORT \
+    --config-dir /config/pretraining \
+    --config-name wav2vec2_base_kavi.yaml
