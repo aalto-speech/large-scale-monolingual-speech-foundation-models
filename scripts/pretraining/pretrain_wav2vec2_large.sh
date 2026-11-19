@@ -8,20 +8,20 @@
 #SBATCH --cpus-per-task=7
 #SBATCH --gpus-per-node=8
 #SBATCH --time=2-00:00:00
-#SBATCH --account=project_462000187
+#SBATCH --account=project_462000971
 
 c=fe
 MYMASKS="0x${c}000000000000,0x${c}00000000000000,0x${c}0000,0x${c}000000,0x${c},0x${c}00,0x${c}00000000,0x${c}0000000000"
-
 module purge
 module load CrayEnv
-module load PrgEnv-cray/8.3.3
+module load PrgEnv-cray
 module load craype-accel-amd-gfx90a
-module load cray-python
+module load cray-python/3.10.10
+module load gcc-native
 
-module use /pfs/lustrep2/projappl/project_462000125/samantao-public/mymodules
-module load aws-ofi-rccl/rocm-5.2.3.lua
-
+module load LUMI/24.03 partition/G
+module load rocm/6.0.3
+module load aws-ofi-rccl/17d41cb-cpeGNU-24.03
 module list
 
 if [ ! -d /my_python_env ] ; then
@@ -30,16 +30,16 @@ if [ ! -d /my_python_env ] ; then
     cd my_python_env
 
     pip install git+https://github.com/Getmany1/omegaconf@2.0_branch
+    pip install hydra-core==1.0.7
     
-    pip install torch==1.13.1+rocm5.2 torchvision==0.14.1+rocm5.2 torchaudio==0.13.1 --extra-index-url https://download.pytorch.org/whl/rocm5.2
-    pip install librosa pyarrow datasets transformers accelerate timm fairseq fairscale wandb python-hostlist tensorboardx
-    cp /scripts/misc/corrected_fairseq_utils.py lib/python3.10/site-packages/fairseq/distributed/utils.py
+    pip install torch==2.3.0 torchvision==0.18.0 torchaudio==2.3.0 --index-url https://download.pytorch.org/whl/rocm6.0
     
-    git clone https://github.com/ROCmSoftwarePlatform/apex
-    cd apex
-    module load aws-ofi-rccl/rocm-5.5.0.lua
-    python setup.py install --cpp_ext --cuda_ext
-    module load aws-ofi-rccl/rocm-5.2.3.lua
+    pip install tqdm timm librosa pyarrow cffi ninja cython scikit-learn ipython packaging wheel regex sacrebleu bitarray tensorboardx python-hostlist wandb editdistance jiwer datasets transformers accelerate fairseq fairscale
+
+    git clone https://github.com/Getmany1/fairseq
+    cd fairseq
+    pip install --no-deps --no-build-isolation --editable ./ --verbose    # if this one fails, try     pip install --editable ./ --verbose
+    python setup.py build develop
 else
     source /my_python_env/bin/activate
 fi
@@ -60,5 +60,5 @@ fi
 
 export MIOPEN_FIND_MODE=2
 
-srun -N 64 --gpus 512 --ntasks-per-node=8 --cpus-per-task=7 --cpu-bind=mask_cpu:$MYMASKS \
+srun -N $SLURM_JOB_NUM_NODES --gpus $TOTAL_GPUS --ntasks-per-node=8 --cpus-per-task=7 --cpu-bind=mask_cpu:$MYMASKS \
 /scripts/pretraining/pretrain_wav2vec2_large_bash.sh
