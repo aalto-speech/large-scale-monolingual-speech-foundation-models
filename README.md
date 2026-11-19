@@ -1,5 +1,11 @@
-# Large-scale monolingual speech foundation models
-Scripts for training large-scale monolingual speech foundation models with 158K hours of Finnish speech
+# Finnish speech SSL at scale: 471K hours from 2.1M hours of broadcast audio (2026)
+
+Scripts for training large-scale self-supervised speech foundation models on 471K hours of Finnish speech, selected by confidence filtering from 2.1M hours of raw broadcast audio (KAVI 2.0), as described in [From 2.1M Hours of Raw Broadcast Audio to Finnish Speech SSL: Confidence Filtering and Architectural Analysis at Scale (Getman et al., 2026)](https://arxiv.org/abs/2610.13102).
+
+# Large-scale monolingual speech foundation models (2025)
+
+Scripts for training self-supervised monolingual speech foundation models on 158K hours of Finnish speech, as described in [Is your model big enough? Training and interpreting large-scale monolingual speech foundation models (Getman et al., 2025)](https://www.isca-archive.org/interspeech_2025/getman25_interspeech.html).
+
 
 ## Pre-trained and fine-tuned (4,600 hours) models
 
@@ -94,11 +100,21 @@ To fine-tune a wav2vec 2.0 Base model using Huggingface Transformers, run
 sbatch scripts/finetuning/low-resource-asr/finetune_wav2vec2_base.sh
 ```
 
-## Citation
+# Citation
 
-If you use our models or scripts, please cite our article as:
+If you use our models or scripts, please cite our work as:
 
 ```bibtex
+@misc{getman202621mhoursrawbroadcast,
+      title={{From 2.1M Hours of Raw Broadcast Audio to Finnish Speech SSL: Confidence Filtering and Architectural Analysis at Scale}}, 
+      author={{Yaroslav Getman and Tamás Grósz and Tommi Lehtonen and Mikko Kurimo}},
+      year={{2026}},
+      eprint={{2610.13102}},
+      archivePrefix={{arXiv}},
+      primaryClass={{cs.CL}},
+      url={{https://arxiv.org/abs/2610.13102}}, 
+}
+
 @inproceedings{getman25_interspeech,
   title     = {{Is your model big enough? Training and interpreting large-scale monolingual speech foundation models}},
   author    = {{Yaroslav Getman and Tamás Grósz and Tommi Lehtonen and Mikko Kurimo}},
