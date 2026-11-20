@@ -2,6 +2,19 @@
 
 Scripts for training large-scale self-supervised speech foundation models on 471K hours of Finnish speech, selected by confidence filtering from 2.1M hours of raw broadcast audio (KAVI 2.0), as described in [From 2.1M Hours of Raw Broadcast Audio to Finnish Speech SSL: Confidence Filtering and Architectural Analysis at Scale (Getman et al., 2026)](https://arxiv.org/abs/2610.13102).
 
+## Data pre-processing
+
+A few extra steps are introduced compared to the previous work:
+
+1. After voice activity detection (VAD), ASR transcripts and CTC log-probabilities are extracted, followed by transcript-based deduplication.
+2. ASR confidence-based data filtering is performed using the CTC log-probabilities.
+
+The extra scripts for these steps can be found in /scripts/data_preprocessing/kavi_2_0.
+
+## Pre-training the models
+
+wav2vec 2.0 models with alternative encoders in addition to the vanilla Transformer are trained, including the convolution-augmented Conformer and E-Branchformer. The latter is not natively supported in Fairseq and is implemented as an extension at https://github.com/Getmany1/fairseq. Pretraining configurations can be found in config/pretraining/kavi_2_0.
+
 # Large-scale monolingual speech foundation models (2025)
 
 Scripts for training self-supervised monolingual speech foundation models on 158K hours of Finnish speech, as described in [Is your model big enough? Training and interpreting large-scale monolingual speech foundation models (Getman et al., 2025)](https://www.isca-archive.org/interspeech_2025/getman25_interspeech.html).
@@ -19,7 +32,7 @@ Model
 [wav2vec 2.0 X-Large Fine-tuned](https://zenodo.org/doi/10.5281/zenodo.13754077)
 
 More details on the models are available in the [paper](https://www.isca-archive.org/interspeech_2025/getman25_interspeech.html).
-The models are also available at [Huggingface Hub](https://huggingface.co/collections/GetmanY1/wav2vec2-fi-150k-66c9d75d18579088974ea37f)
+The models are also available at [Hugging Face Hub](https://huggingface.co/collections/GetmanY1/wav2vec2-fi-150k-66c9d75d18579088974ea37f)
 
 ## Training logs
 
@@ -74,7 +87,7 @@ The scripts shared in this repository are adapted to the AMD hardware of the [LU
 sbatch /scripts/pretraining/pretrain_wav2vec2_base.sh
 ```
 
-Note: you can simulate 512 GPUs by using k GPUs and adding command line parameters (before `--config-dir`)
+Note: you can simulate 512 GPUs by using k GPUs and adding command-line parameters (before `--config-dir`)
 `distributed_training.distributed_world_size=k` `+optimization.update_freq='[x]'` where x = 512/k
 
 ## Fine-tuning the models with CTC
@@ -94,7 +107,7 @@ sbatch scripts/finetuning/full-scale-asr/finetune_wav2vec2_base.sh
 
 ## Fine-tuning the models with CTC using 🤗Transformers
 
-To fine-tune a wav2vec 2.0 Base model using Huggingface Transformers, run
+To fine-tune a wav2vec 2.0 Base model using Hugging Face Transformers, run
 
 ```
 sbatch scripts/finetuning/low-resource-asr/finetune_wav2vec2_base.sh
