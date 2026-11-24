@@ -1,34 +1,37 @@
 # Finnish speech SSL at scale: 471K hours from 2.1M hours of broadcast audio (2026)
 
-Scripts for training large-scale self-supervised speech foundation models on 471K hours of Finnish speech, selected by confidence filtering from 2.1M hours of raw broadcast audio (KAVI 2.0), as described in [From 2.1M Hours of Raw Broadcast Audio to Finnish Speech SSL: Confidence Filtering and Architectural Analysis at Scale (Getman et al., 2026)](https://arxiv.org/abs/2610.13102).
+Scripts for training large-scale self-supervised speech foundation models on 471K hours of Finnish speech. The data was selected from 2.1M hours of raw broadcast audio (KAVI 2.0) through deduplication and ASR confidence filtering, as described in [From 2.1M Hours of Raw Broadcast Audio to Finnish Speech SSL: Confidence Filtering and Architectural Analysis at Scale (Getman et al., 2026)](https://arxiv.org/abs/2610.13102).
 
-## Data pre-processing
+## Data preprocessing
 
-A few extra steps are introduced compared to the previous work:
+Compared to [previous work](https://www.isca-archive.org/interspeech_2025/getman25_interspeech.html), the pipeline adds the following steps:
 
-1. After voice activity detection (VAD), ASR transcripts and CTC log-probabilities are extracted, followed by transcript-based deduplication.
-2. ASR confidence-based data filtering is performed using the CTC log-probabilities.
+1. After voice activity detection (VAD), ASR transcripts and CTC log-probabilities are extracted for each segment.
+2. Duplicate segments (e.g., rebroadcasts) are removed based on the ASR transcripts.
+3. Segments are filtered by ASR confidence computed from the CTC log-probabilities.
 
-The extra scripts for these steps can be found in /scripts/data_preprocessing/kavi_2_0.
+Scripts for these steps are in `scripts/data_preprocessing/kavi_2_0`.
 
-## Pre-training the models
+## Pretraining the models
 
-wav2vec 2.0 models with alternative encoders in addition to the vanilla Transformer are trained, including the convolution-augmented Conformer and E-Branchformer. The latter is not natively supported in Fairseq and is implemented as an extension at https://github.com/Getmany1/fairseq. Pretraining configurations can be found in config/pretraining/kavi_2_0.
+wav2vec 2.0 models with alternative encoders in addition to the vanilla Transformer are trained, including the convolution-augmented Conformer and E-Branchformer. The latter is not natively supported in Fairseq, so it is implemented in our fork at https://github.com/Getmany1/fairseq.
+
+Pretraining configurations are in `config/pretraining/kavi_2_0`.
 
 # Large-scale monolingual speech foundation models (2025)
 
 Scripts for training self-supervised monolingual speech foundation models on 158K hours of Finnish speech, as described in [Is your model big enough? Training and interpreting large-scale monolingual speech foundation models (Getman et al., 2025)](https://www.isca-archive.org/interspeech_2025/getman25_interspeech.html).
 
 
-## Pre-trained and fine-tuned (4,600 hours) models
+## Pretrained and fine-tuned (4,600 hours) models
 
 Model
 |---
-[wav2vec 2.0 Base Pre-trained](https://zenodo.org/doi/10.5281/zenodo.13754087) 
+[wav2vec 2.0 Base pretrained](https://zenodo.org/doi/10.5281/zenodo.13754087) 
 [wav2vec 2.0 Base Fine-tuned](https://zenodo.org/doi/10.5281/zenodo.13754085) 
-[wav2vec 2.0 Large Pre-trained](https://zenodo.org/doi/10.5281/zenodo.13754083) 
+[wav2vec 2.0 Large pretrained](https://zenodo.org/doi/10.5281/zenodo.13754083) 
 [wav2vec 2.0 Large Fine-tuned](https://zenodo.org/doi/10.5281/zenodo.13754081) 
-[wav2vec 2.0 X-Large Pre-trained](https://zenodo.org/doi/10.5281/zenodo.13754079)
+[wav2vec 2.0 X-Large pretrained](https://zenodo.org/doi/10.5281/zenodo.13754079)
 [wav2vec 2.0 X-Large Fine-tuned](https://zenodo.org/doi/10.5281/zenodo.13754077)
 
 More details on the models are available in the [paper](https://www.isca-archive.org/interspeech_2025/getman25_interspeech.html).
@@ -36,13 +39,13 @@ The models are also available at [Hugging Face Hub](https://huggingface.co/colle
 
 ## Training logs
 
-Developing a foundation model from scratch requires not only vast amounts of unlabeled speech data but also substantial computational resources. Moreover, extensive hyperparameter search is often not feasible for large-scale models. Therefore, we are glad to share our pre-training logs on Weights & Biases (W&B) to provide more insights for other researchers developing their own speech foundation models.
+Developing a foundation model from scratch requires not only vast amounts of unlabeled speech data but also substantial computational resources. Moreover, extensive hyperparameter search is often not feasible for large-scale models. Therefore, we are glad to share our pretraining logs on Weights & Biases (W&B) to provide more insights for other researchers developing their own speech foundation models.
 
 * [wav2vec 2.0 Base](https://wandb.ai/getmanya/wav2vec2_base_KAVI?nw=nwusergetmanya)
 * [wav2vec 2.0 Large](https://wandb.ai/getmanya/wav2vec2_large_KAVI?nw=nwusergetmanya)
 * [wav2vec 2.0 X-Large](https://wandb.ai/getmanya/wav2vec2_1B_KAVI?nw=nwusergetmanya)
 
-## Data pre-processing
+## Data preprocessing
 
 The raw, unlabeled TV and radio data are organized into 1-hour files, each located in the directory `channel_name/year/month/day/channel_name_start_time-end_time.ts`:
 
@@ -77,9 +80,9 @@ The raw, unlabeled TV and radio data are organized into 1-hour files, each locat
 **Note:** Fairseq does not support compressed archives
 **Note:** Millions of small files affect the performance of any filesystem. As a result, quotas on Lustre filesystems are typically limited to several million files. To avoid running out of quota, put the short audio files into a .tar archive after VAD-based segmentation of a small part of the raw data (one day, month, or year), and remove them immediately afterward. You can also consider storing the preprocessed audio files in the `/tmp` folder, which usually does not consume the quota.
 3. Prepare the Fairseq manifest of the data. `scripts/data_preprocessing/prepare_fairseq_manifest.sh` creates a .tsv file with all `radio_station_1` audio samples stored in the corresponding .tar archives. To hold out a validation subset `valid_size_hours` hours, run `scripts/data_preprocessing/prepare_fairseq_manifest_valid_tsv.sh` afterward.
-4. Binarize the Fairseq manifest by running `scripts/data_preprocessing/binarize_manifest.sh`. This step is recommended for large datasets to avoid running out of RAM during pre-training. 
+4. Binarize the Fairseq manifest by running `scripts/data_preprocessing/binarize_manifest.sh`. This step is recommended for large datasets to avoid running out of RAM during pretraining. 
 
-## Pre-training the models
+## Pretraining the models
 
 The scripts shared in this repository are adapted to the AMD hardware of the [LUMI supercomputer](https://www.lumi-supercomputer.eu/). To train a wav2vec 2.0 Base model, run
 
@@ -98,7 +101,7 @@ To fine-tune a wav2vec 2.0 Base model using Fairseq, run
 sbatch scripts/finetuning/full-scale-asr/finetune_wav2vec2_base.sh
 ```
 
-* When pre-training on the LUMI supercomputer using Fairseq, it is crucial to set `export MIOPEN_FIND_MODE=2`. MIOpen is AMD’s deep-learning primitives library for GPUs (counterpart of NVIDIA's cuDNN). Setting the Find Mode to `2`, or `FAST` is crucial for optimal pre-training speed, otherwise pre-training is 10-20x times slower. More details on MIOpen Find modes are available [here](https://rocm.docs.amd.com/projects/MIOpen/en/docs-5.6.0/find_and_immediate.html) 
+* When pretraining on the LUMI supercomputer using Fairseq, it is crucial to set `export MIOPEN_FIND_MODE=2`. MIOpen is AMD’s deep-learning primitives library for GPUs (counterpart of NVIDIA's cuDNN). Setting the Find Mode to `2`, or `FAST` is crucial for optimal pretraining speed, otherwise pretraining is 10-20x times slower. More details on MIOpen Find modes are available [here](https://rocm.docs.amd.com/projects/MIOpen/en/docs-5.6.0/find_and_immediate.html) 
 
 * You can simulate 128 GPUs by using k GPUs and adding command line parameters (before `--config-dir`)
 `distributed_training.distributed_world_size=k` `+optimization.update_freq='[x]'` where x = 128/k
